@@ -43,6 +43,23 @@ docker compose exec app python scripts/get_embeddings.py
 
 Upload an image and click **Search**.
 
+## Demo
+
+![Demo](static/demo.gif)
+
+## Test images
+
+The folder `./test-img/` contains a few images you can use as query uploads in the UI.
+
+## Startup indexing behavior
+
+On the first **Search** request (and only if LanceDB is empty), the app will automatically:
+- scan the configured `APP_DATA_DIR` (commonly `/app/static`)
+- compute embeddings
+- write them into LanceDB under `./lancedb/`
+
+You can still run manual ingestion any time via `docker compose exec app python scripts/get_embeddings.py`.
+
 ## Notes
 
 - The DB stores **relative image paths** (relative to `APP_DATA_DIR`).

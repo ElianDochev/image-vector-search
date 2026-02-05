@@ -1,6 +1,6 @@
 __all__ = [
     "config",
-    "db",
     "embedding",
+    "ingest",
     "search",
 ]

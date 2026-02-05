@@ -8,6 +8,7 @@ from PIL import Image
 
 from picture_similarities.config import get_settings
 from picture_similarities.embedding import compute_embedding
+from picture_similarities.ingest import ingest_directory, is_table_empty
 from picture_similarities.search import query_similar
 
 
@@ -43,6 +44,16 @@ def main() -> None:
         if not data_dir.exists():
             st.error(f"Data dir not found: {data_dir}. Mount ./data into the container.")
             return
+
+        # Auto-ingest on first use if LanceDB is empty.
+        if is_table_empty():
+            with st.spinner("Indexing images into LanceDB (first run)…"):
+                inserted = ingest_directory(data_dir, show_progress=False)
+            if inserted == 0:
+                st.error(
+                    "No images found to index. Put images under the configured APP_DATA_DIR and retry."
+                )
+                return
 
         query_emb = compute_embedding(image)
         results = query_similar(query_emb, top_k=top_k)
