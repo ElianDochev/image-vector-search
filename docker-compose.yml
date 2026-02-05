@@ -1,0 +1,13 @@
+services:
+  app:
+    build: .
+    environment:
+      APP_DATA_DIR: ${APP_DATA_DIR:-/app/data}
+      STREAMLIT_SERVER_PORT: ${STREAMLIT_SERVER_PORT:-8501}
+      LANCEDB_DIR: ${LANCEDB_DIR:-/app/lancedb}
+    ports:
+      - "8501:8501"
+    volumes:
+      - ./data:/app/data
+      - ./static:/app/static
+      - ./lancedb:/app/lancedb
