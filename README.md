@@ -1,0 +1,56 @@
+# Picture Similarities
+
+Image similarity search app: upload a query image and retrieve visually similar images from a local dataset.
+
+It follows the approach in `plan.md`:
+- Extract embeddings with **ResNet-50** (`microsoft/resnet-50` via Hugging Face Transformers)
+- Store/search embeddings in **LanceDB** (local vector database)
+- Provide a minimal **Streamlit** UI for interactive search
+
+## What runs in Docker
+
+- `app`: Python + Streamlit app (CPU-only)
+
+LanceDB stores its data on disk under `./lancedb/` (mounted into the container).
+
+## Quickstart
+
+1) Create your `.env` from the example:
+
+```bash
+cp .env.example .env
+```
+
+2) Put some images under `./data/` (or `./static/`) (any nested folders are fine).
+
+If you used `./static/`, set `APP_DATA_DIR=/app/static` in `.env`.
+
+3) Start services:
+
+```bash
+docker compose up --build
+```
+
+4) In another terminal, ingest embeddings into the DB:
+
+```bash
+docker compose exec app python scripts/get_embeddings.py
+```
+
+5) Open the UI:
+
+- http://localhost:8501
+
+Upload an image and click **Search**.
+
+## Notes
+
+- The DB stores **relative image paths** (relative to `APP_DATA_DIR`).
+- The dataset folders are mounted into the `app` container at `/app/data` and `/app/static`.
+- LanceDB files live in `./lancedb/` on the host.
+- If you change the dataset contents, re-run the ingestion script.
+
+## Common troubleshooting
+
+- **No results / empty DB**: run `docker compose exec app python scripts/get_embeddings.py`.
+- **Big downloads on first run**: the ResNet-50 model weights are downloaded the first time embeddings are computed.
