@@ -31,10 +31,10 @@ If you used `./static/`, set `APP_DATA_DIR=/app/static` in `.env`.
 docker compose up --build
 ```
 
-4) In another terminal, ingest embeddings into the DB:
+4) Ingest embeddings into the DB via Compose:
 
 ```bash
-docker compose exec app python scripts/get_embeddings.py
+docker compose run --rm ingest
 ```
 
 5) Open the UI:
@@ -58,7 +58,7 @@ On the first **Search** request (and only if LanceDB is empty), the app will aut
 - compute embeddings
 - write them into LanceDB under `./lancedb/`
 
-You can still run manual ingestion any time via `docker compose exec app python scripts/get_embeddings.py`.
+You can still run manual ingestion any time via `docker compose run --rm ingest`.
 
 ## Notes
 
@@ -69,5 +69,5 @@ You can still run manual ingestion any time via `docker compose exec app python 
 
 ## Common troubleshooting
 
-- **No results / empty DB**: run `docker compose exec app python scripts/get_embeddings.py`.
+- **No results / empty DB**: run `docker compose run --rm ingest`.
 - **Big downloads on first run**: the ResNet-50 model weights are downloaded the first time embeddings are computed.

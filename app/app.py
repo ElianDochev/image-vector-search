@@ -27,7 +27,7 @@ def main() -> None:
     st.set_page_config(page_title="Picture Similarities", layout="wide")
     st.title("Picture Similarities")
     st.write(
-        "Upload an image and retrieve the most visually similar images from the dataset in ./data."
+        f"Upload an image and retrieve the most visually similar images from the dataset in `{data_dir}`."
     )
 
     top_k = st.slider("Top-K results", min_value=1, max_value=20, value=5, step=1)

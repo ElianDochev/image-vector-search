@@ -16,7 +16,7 @@ def main() -> None:
     inserted = ingest_directory(data_dir, show_progress=True)
     if inserted == 0:
         raise SystemExit(
-            f"No images found under {data_dir}. Put images in ./data or ./static and set APP_DATA_DIR accordingly."
+            f"No images found under {data_dir}. Put images in ./data or ./static, or set APP_DATA_DIR explicitly."
         )
 
 

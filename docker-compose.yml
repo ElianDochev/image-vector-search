@@ -2,7 +2,7 @@ services:
   app:
     build: .
     environment:
-      APP_DATA_DIR: ${APP_DATA_DIR:-/app/data}
+      APP_DATA_DIR: ${APP_DATA_DIR:-/app/static}
       STREAMLIT_SERVER_PORT: ${STREAMLIT_SERVER_PORT:-8501}
       LANCEDB_DIR: ${LANCEDB_DIR:-/app/lancedb}
     ports:
@@ -11,3 +11,15 @@ services:
       - ./data:/app/data
       - ./static:/app/static
       - ./lancedb:/app/lancedb
+
+  ingest:
+    build: .
+    profiles: ["ingest"]
+    environment:
+      APP_DATA_DIR: ${APP_DATA_DIR:-/app/static}
+      LANCEDB_DIR: ${LANCEDB_DIR:-/app/lancedb}
+    volumes:
+      - ./data:/app/data
+      - ./static:/app/static
+      - ./lancedb:/app/lancedb
+    command: ["python", "scripts/get_embeddings.py"]
